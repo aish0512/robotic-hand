@@ -120,12 +120,6 @@ def run(
                 s += f'{i}: '
             else:
                 p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
-            if len(det):
-                angle = 180
-                servo.write(angle)
-                time.sleep(0.1)
-
-            board.exit()
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # im.jpg
             txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
@@ -141,6 +135,12 @@ def run(
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
+                    if c == 0:
+                        angle = 180
+                        servo.write(angle)
+                        time.sleep(0.1)
+
+                    board.exit()
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
