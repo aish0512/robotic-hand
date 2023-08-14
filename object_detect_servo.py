@@ -3,7 +3,7 @@ import numpy as np
 import pyfirmata
 import time
 
-board = pyfirmata.Arduino('COM3')
+board = pyfirmata.Arduino('/dev/ttyACM0')
 
 servo_pin1 = 13
 servo_pin2 = 12
@@ -11,11 +11,11 @@ servo_pin3 = 11
 servo_pin4 = 10
 servo_pin5 = 9
 
-servo1 = board.get_pin('d:{}:s'.formar(servo_pin1))
-servo2 = board.get_pin('d:{}:s'.formar(servo_pin2))
-servo3 = board.get_pin('d:{}:s'.formar(servo_pin3))
-servo4 = board.get_pin('d:{}:s'.formar(servo_pin4))
-servo5 = board.get_pin('d:{}:s'.formar(servo_pin5))
+servo1 = board.get_pin('d:{}:s'.format(servo_pin1))
+servo2 = board.get_pin('d:{}:s'.format(servo_pin2))
+servo3 = board.get_pin('d:{}:s'.format(servo_pin3))
+servo4 = board.get_pin('d:{}:s'.format(servo_pin4))
+servo5 = board.get_pin('d:{}:s'.format(servo_pin5))
 
 frameWidth = 640
 frameHeight = 480
@@ -87,20 +87,57 @@ def getContours(img,imgContour):
                         (0, 255, 0), 2)
             print("Area:",int(area))
             print("Peri:",int(perimeter))
-            if perimeter > 900 and perimeter <1100:
-                time.sleep(0.1)
-                servo1.write(106)
-                servo2.write(90)
-                servo3.write(147)
-                servo4.write(126)
-                servo5.write(125)
-                time.sleep(0.1)
+            if perimeter > 680 and perimeter < 700:
+                servo1.write(100)
+                servo2.write(130)
+                servo3.write(178)
+                servo4.write(130)
+                servo5.write(120)
+                print('earphone')
+                time.sleep(10)
                 servo1.write(0)
                 servo2.write(0)
                 servo3.write(0)
                 servo4.write(0)
                 servo5.write(0)
                 time.sleep(0.1)
+                
+            elif perimeter > 2400 and perimeter < 2450:
+                servo1.write(106)
+                servo2.write(100)
+                servo3.write(147)
+                servo4.write(126)
+                servo5.write(105)
+                print('holding ball')
+                time.sleep(10)
+                servo1.write(0)
+                servo2.write(0)
+                servo3.write(0)
+                servo4.write(0)
+                servo5.write(0)
+                time.sleep(1)
+            elif perimeter >  2800 and perimeter < 2850:
+                servo1.write(116)
+                servo2.write(139)
+                servo3.write(174)
+                servo4.write(154)
+                servo5.write(132)
+                print('savlon')
+                time.sleep(10)
+                servo1.write(0)
+                servo2.write(0)
+                servo3.write(0)
+                servo4.write(0)
+                servo5.write(0)
+                time.sleep(1)
+            else:
+                servo1.write(0)
+                servo2.write(0)
+                servo3.write(0)
+                servo4.write(0)
+                servo5.write(0)
+                time.sleep(0.1)
+
 while True:
     success, img = cap.read()
     imgContour = img.copy()
@@ -130,6 +167,7 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-
+            
+board.exit()
 cap.release()
 cv2.destroyAllWindows()
